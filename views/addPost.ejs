@@ -5,12 +5,15 @@
 <title> <%= title %> </title>
 <% } %>
 <!-- Above is navbar stuff -->
-
-<form action="/verify-post" method="POST">
-    <input type="text" placeholder="title" name="title"> <br>
-    <textarea col="5" rows="5" name="comment"></textarea> <br>
-    <button> Submit </button>
-</form>
+<section class="section">
+    <div class="container is-max-desktop">
+        <form action="/verify-post" method="POST">
+            <input type="text" placeholder="title" name="title"> <br>
+            <textarea col="5" rows="5" name="comment"></textarea> <br>
+            <button> Submit </button>
+        </form>
+    </div>
+</section>
 
 <!-- Under is footer stuff -->
 <%- include('../includes/footer.ejs') %>

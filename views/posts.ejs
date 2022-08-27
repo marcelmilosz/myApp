@@ -7,13 +7,16 @@
 <!-- Above is navbar stuff -->
 
 
-
-<h1> Hello </h1>
-<h2> Msg: <%= msg %>
-</h2>
-<% if (recentlyAddedPost) { %>
-<h3> Post added! </h3>
-<% } %>
+<section class="section">
+    <div class="container is-max-desktop">
+        <h1> Hello </h1>
+        <h2> Msg: <%= msg %>
+        </h2>
+        <% if (recentlyAddedPost) { %>
+        <h3> Post added! </h3>
+        <% } %>
+    </div>
+</section>
 
 <a href="/addPost"> Add Post </a>
 

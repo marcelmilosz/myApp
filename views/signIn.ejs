@@ -6,13 +6,16 @@
 <% } %>
 <!-- Above is navbar stuff -->
 
-
-<form action="/verify-signIn" method="POST">
-    <input type="text" name="username" placeholder="username"> <br>
-    <input type="text" name="email" placeholder="e-mail"> <br>
-    <input type="password" name="password" placeholder="password"> <br>
-    <button> Sign In </button>
-</form>
+<section class="section">
+    <div class="container is-max-desktop">
+        <form action="/verify-signIn" method="POST">
+            <input type="text" name="username" placeholder="username"> <br>
+            <input type="text" name="email" placeholder="e-mail"> <br>
+            <input type="password" name="password" placeholder="password"> <br>
+            <button> Sign In </button>
+        </form>
+    </div>
+</section>
 
 <!-- Under is footer stuff -->
 <%- include('../includes/footer.ejs') %>

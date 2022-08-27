@@ -37,17 +37,17 @@ app.get('/', (req, res) => {
 
     if (req.session.loggedin) {
         // Output username
-        res.render('home', { title: "Huj", isLogged: true });
+        res.render('home', { title: "Home", isLogged: true });
     } else {
         // Not logged in
-        res.render('home', { title: "Huj", isLogged: false });
+        res.render('home', { title: "Home", isLogged: false });
     }
 })
 
 
 
 app.get('/signIn', (req, res) => {
-    res.render('signIn');
+    res.render('signIn', { title: "Sign In" });
 })
 
 app.post('/verify-signIn', function (req, res) {
@@ -70,7 +70,7 @@ app.post('/verify-signIn', function (req, res) {
 });
 
 app.get('/login', (req, res) => {
-    res.render('login')
+    res.render('login', { title: "Log In" })
 })
 
 app.post('/auth', function (req, res) {
@@ -95,13 +95,13 @@ app.post('/auth', function (req, res) {
 app.get('/posts', (req, res) => {
     // Są dwie opcje wyrenderowania strony Static (res.sendFile) i Dynamic (res.render) i chodzi o to, jakie dane tam trafiają jak są jakieś promise to lepiej dynamic
     console.log("get - /posts");
-    res.render('posts', { title: "posty", msg: "hi!", recentlyAddedPost: false });
+    res.render('posts', { title: "Posts", msg: "hi!", recentlyAddedPost: false });
 })
 
 // Site with add post form
 app.get('/addPost', (req, res) => {
     console.log("get - /addPost");
-    res.render('addPost');
+    res.render('addPost', { title: "Add post" });
 })
 
 app.post('/verify-post', (req, res) => {
