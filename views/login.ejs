@@ -1,0 +1,22 @@
+<%- include('../includes/head.ejs') %>
+
+<% if (typeof(title) == 'undefined') { %>
+<title> Title not found! </title>
+<% } else { %>
+<title> <%= title %> </title>
+<% } %>
+
+<!-- Above is navbar stuff -->
+
+
+
+<form action="/auth" method="POST">
+    <input type="text" name="email" placeholder="e-mail"> <br>
+    <input type="password" name="password" placeholder="password"> <br>
+    <button> Log In!</button>
+</form>
+
+
+
+<!-- Under is footer stuff -->
+<%- include('../includes/footer.ejs') %>

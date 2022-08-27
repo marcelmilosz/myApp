@@ -1,0 +1,23 @@
+<%- include('../includes/head.ejs') %>
+<% if (typeof(title) === 'undefined') { %>
+<title> Title not found! </title>
+<% } else { %>
+<title> <%= title %> </title>
+<% } %>
+<!-- Above is navbar stuff -->
+
+
+
+<h1> Hello </h1>
+<h2> Msg: <%= msg %>
+</h2>
+<% if (recentlyAddedPost) { %>
+<h3> Post added! </h3>
+<% } %>
+
+<a href="/addPost"> Add Post </a>
+
+
+
+<!-- Under is footer stuff -->
+<%- include('../includes/footer.ejs') %>
