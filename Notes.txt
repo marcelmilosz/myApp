@@ -1,9 +1,18 @@
 23.08.2022 
 - Skończyłeś na początkującym setupie 
 - Wszystko działa
-- DONE | Kolejne kroki to stworzenie formularza do dodania posta 
-- DONE | Przechowanie danych i wypisanie ich na innej stronie (/posts)
+- DONE | @Kolejne kroki to stworzenie formularza do dodania posta 
+- DONE | @Przechowanie danych i wypisanie ich na innej stronie (/posts)
 
 25.08.2022
-- Ogarnij jak dodać id do mongoDB takie liczbowe? 
+- @Ogarnij jak dodać id do mongoDB takie liczbowe? 
 - Działa wszystko z postem póki co <3 
+
+27.08.202
+- Dodałeś gita
+- Dodałeś menu i stworzyłeś cssy
+- Stronka wygląda super
+- @Dodaj informacje czy uzytkowink jest zalogowany czy nie (Guest - User) w menu obok sign in 
+- @Dodaj logike przy rejestrowaniu usera (walidacja w js zeby na zywo pokazywalo co trzeba zmienic np. password not match) 
+- @Dodaj logike aby user mogl jest zalogowac (uzywajac maila lub nicku)
+- @Zrób prosty system aby wyświetlało automatycznie kilka postów na stronce 

@@ -8,14 +8,25 @@
 
 <section class="section">
     <div class="container is-max-desktop">
-        <form action="/verify-signIn" method="POST">
-            <input type="text" name="username" placeholder="username"> <br>
-            <input type="text" name="email" placeholder="e-mail"> <br>
-            <input type="password" name="password" placeholder="password"> <br>
-            <button> Sign In </button>
+        <form action="/signIn" method="POST">
+            <input type="text" name="username" placeholder="username" minlength="5" maxlength="20" required> <br>
+            <input type="email" name="email" minlength="5" maxlength="35" placeholder="e-mail" required> <br>
+            <input type="password" minlength="8" name="password" placeholder="password" required> <br>
+            <button id="signInBtn"> Sign In </button>
         </form>
+        <% if (typeof(query) !== 'undefined') { %>
+        <% if(query.email == 1) { %>
+        <h2> Email already exists! </h2>
+        <% } %>
+        <% if(query.username == 1) { %>
+        <h2> Username already exists! </h2>
+        <% } %>
+        <% } %></p>
+        <h2 id="emailInfo"> </h2>
+        <h2 id="passInfo"> </h2>
     </div>
 </section>
+
 
 <!-- Under is footer stuff -->
 <%- include('../includes/footer.ejs') %>
