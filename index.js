@@ -53,9 +53,7 @@ app.use(session({
 
 
 app.get('/', (req, res) => {
-
     res.render('home', { title: "Home", isLogged: "Not set" });
-
 })
 
 
@@ -73,19 +71,15 @@ app.post('/signIn', (req, res) => {
     let usernameExist = 0;
     let emailExist = 0;
 
-    console.log(username, email);
-
     User.find({ username: username })
         .then(response => {
             if (response.length !== 0) {
-                console.log("Username exists!")
                 usernameExist = 1;
             }
 
             User.find({ email: email })
                 .then(responseEmail => {
                     if (responseEmail.length !== 0) {
-                        console.log("Email exists!")
                         emailExist = 1;
                     }
                     respondWithAnswer(usernameExist, emailExist);
@@ -94,8 +88,7 @@ app.post('/signIn', (req, res) => {
 
     function respondWithAnswer(uExist, eExist) {
         if (uExist == 0 && eExist == 0) {
-            console.log("You can register!");
-            // register();
+            register();
         } else {
             console.log("Red: ", eExist, uExist);
             res.redirect(url.format({
@@ -107,60 +100,43 @@ app.post('/signIn', (req, res) => {
         }
     }
 
-
-    // console.log(usernameExists, emailExists)
-
-    // if (emailExists == true && usernameExists == true) {
-    //     res.redirect(url.format({
-    //         pathname: "/", query: {
-    //             "emailExists": 1,
-    //             "usernameExists": 1,
-    //         }
-    //     }));
-    // }
-    // if (emailExists == false && usernameExists == false) {
-    //     // register();
-    //     console.log("U can be registered!");
-    // }
-    // if (emailExists == true && usernameExists == false) {
-    //     res.redirect(url.format({
-    //         pathname: "/", query: {
-    //             "emailExists": 1,
-    //             "usernameExists": 0,
-    //         }
-    //     }));
-    // }
-    // if (emailExists == false && usernameExists == true) {
-    //     res.redirect(url.format({
-    //         pathname: "/", query: {
-    //             "emailExists": 0,
-    //             "usernameExists": 1,
-    //         }
-    //     }));
-    // }
-
-
-
-
-
-
     async function register() {
         try {
-            const hashedPassword = await bcrypt.hash(password, 10)
+            const hashedPassword = await bcrypt.hash(password, 10);
 
-            User.collection.insertOne({ username: username, email: email, password: hashedPassword })
+            var today = new Date();
+            var dd = String(today.getDate()).padStart(2, '0');
+            var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+            var yyyy = today.getFullYear();
+
+            today = mm + '/' + dd + '/' + yyyy;
+
+            User.collection.insertOne({ username: username, email: email, password: hashedPassword, userType: 'user', signInDate: today })
                 .then((resx) => {
                     console.log("Worked User Added | Inserted One: ", resx);
-                    res.redirect(302, '/');
+                    res.redirect(url.format({
+                        pathname: "/login", query: {
+                            "userCreated": true
+                        }
+                    }));
                 })
                 .catch((err) => {
                     console.log("Error User not added | Inserted One: ", err);
-                    res.redirect(302, '/');
+                    res.redirect(url.format({
+                        pathname: "/signIn", query: {
+                            "email": eExist,
+                            "username": uExist,
+                            "error": 1
+                        }
+                    }));
                 })
 
         } catch (err) {
-            console.log(err);
-            res.redirect(302, '/signIn');
+            res.redirect(url.format({
+                pathname: "/signIn", query: {
+                    "error": 1
+                }
+            }));
         }
     }
 
@@ -170,13 +146,63 @@ app.post('/signIn', (req, res) => {
 
 
 app.get('/login', (req, res) => {
-    res.render('login', { title: "Log In" })
+    res.render('login', { title: "Log in", query: req.query });
 })
 
-app.post('/auth', function (req, res) {
+app.post('/login', function (req, res) {
+    let username = req.body.username;
+    let password = req.body.password;
 
-    res.redirect('/')
-});
+    // Error: 1 - Something went wrong with db
+    // Error: 2 - User not found
+    // Error: 3 - User found but Password is wrong
+
+
+
+    User.findOne({ $or: [{ username: username }, { email: username }] })
+        .then(response => {
+
+            if (response !== null) {
+                // User found
+
+                // console.log("Inputed password: ", password);
+                // console.log("Db password: ", response.password);
+
+                bcrypt.compare(password, response.password, function (err, responsebCrypt) {
+                    if (err) {
+                        // handle error
+                        res.redirect(url.format({
+                            pathname: "/login", query: {
+                                "error": 3
+                            }
+                        }));
+                    }
+                    if (responsebCrypt) {
+                        // Password Matched! User can log in (add session)
+                        res.redirect(url.format({
+                            pathname: "/",
+                        }));
+
+                    } else {
+                        // Password does not match!
+                        res.redirect(url.format({
+                            pathname: "/login", query: {
+                                "error": 3
+                            }
+                        }));
+                    }
+                });
+            }
+            else {
+                res.redirect(url.format({
+                    pathname: "/login", query: {
+                        "error": 2
+                    }
+                }));
+            }
+
+        })
+})
 
 
 

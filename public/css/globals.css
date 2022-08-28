@@ -1,0 +1,18 @@
+.button-body {
+    font-size: 18px;
+    border: 0;
+    padding: 8px 20px;
+    transition: all 200ms;
+    border-radius: 4px;
+    font-weight: 600;
+}
+
+.button-body:hover {
+    cursor: pointer;
+    transform: scale(1.05);
+}
+
+textarea:focus,
+input:focus {
+    outline: none;
+}

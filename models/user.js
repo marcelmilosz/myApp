@@ -12,6 +12,12 @@ const userSchema = new mongoose.Schema({
     password: {
         type: String,
         required: true
+    },
+    userType: {
+        type: String
+    },
+    signInDate: {
+        type: Date
     }
 })
 

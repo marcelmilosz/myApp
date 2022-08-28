@@ -10,12 +10,34 @@
 
 
 <section class="section">
-    <div class="container is-max-desktop">
-        <form action="/auth" method="POST">
-            <input type="text" name="email" placeholder="e-mail"> <br>
-            <input type="password" name="password" placeholder="password"> <br>
-            <button> Log In!</button>
-        </form>
+    <div class="container is-max-desktop login">
+        <div class="login-container">
+            <div class="login-box">
+                <h1> Log In </h1>
+                <p class="login-info"> You dont have an account yet? <br> <span><a href="/signIn"> Sign In</a></span>
+                </p>
+                <form action="/login" method="POST">
+                    <input type="text" name="username" placeholder="username or e-mail"> <br>
+                    <input type="password" name="password" placeholder="password"> <br>
+                    <button class="button-body"> Log In!</button>
+                </form>
+                <div class="login-error-box">
+                    <% if (typeof(query) !== 'undefined') { %>
+                    <% if (typeof(query.error) !== 'undefined') { %>
+                    <% if (query.error == 1) { %>
+                    <p> - Error.. Try again </p>
+                    <% } %>
+                    <% if (query.error == 2) { %>
+                    <p> - User not found! </p>
+                    <% } %>
+                    <% if (query.error == 3) { %>
+                    <p> - Wrong password! </p>
+                    <% } %>
+                    <% } %>
+                    <% } %>
+                </div>
+            </div>
+        </div>
     </div>
 </section>
 

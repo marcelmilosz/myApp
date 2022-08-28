@@ -16,3 +16,4 @@
 - @Dodaj logike przy rejestrowaniu usera (walidacja w js zeby na zywo pokazywalo co trzeba zmienic np. password not match) 
 - @Dodaj logike aby user mogl jest zalogowac (uzywajac maila lub nicku)
 - @Zrób prosty system aby wyświetlało automatycznie kilka postów na stronce 
+- @Dokończ Wygląd strony Sign in
