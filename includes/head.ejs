@@ -43,9 +43,16 @@
             <a class="navbar-item" href="/posts">
               Posts
             </a>
+            <% if (typeof(userId) == 'undefined') { %>
+            <a class="navbar-item" href="/login">
+              Add post
+            </a>
+            <% } else { %>
             <a class="navbar-item" href="/addPost">
               Add post
             </a>
+            <% } %>
+
 
           </div>
 
@@ -54,7 +61,11 @@
 
               <div class="navbar-item has-dropdown is-hoverable">
                 <a class="navbar-link is-arrowless">
-                  User
+                  <% if (typeof(userId) == 'undefined') { %>
+                  Guest
+                  <% }  else { %>
+                  <%= userId %>
+                  <% } %>
                 </a>
 
                 <div class="navbar-dropdown">
@@ -75,12 +86,19 @@
               </div>
 
               <div class="buttons">
+                <% if (typeof(userId) == 'undefined') { %>
                 <a class="button" href="/signIn">
                   <strong>Sign up</strong>
                 </a>
                 <a class="button" href="/login">
                   Log in
                 </a>
+                <% } else { %>
+                <a class="button" href="/logout">
+                  Log out
+                </a>
+                <% } %>
+
               </div>
             </div>
           </div>

@@ -9,6 +9,7 @@ const mongoose = require('mongoose');
 const Post = require('./models/post.js');
 
 const session = require('express-session');
+const cookieParser = require("cookie-parser");
 const MongoStore = require('connect-mongo')(session);
 
 const User = require('./models/user.js');
@@ -36,16 +37,30 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.use(express.urlencoded({ extended: true })) // for form data
 app.use(express.static(__dirname + '/public')); // For public - css 
+app.use(cookieParser("This is some secret bruh"));
+
+// This is your session variable!
+var sesh;
 
 app.use(session({
-    secret: "secret bro",
+    secret: "thisshouldbesomefuckinghardtoguess",
     resave: false,
     saveUninitialized: true,
     store: sessionStore,
     cookie: {
-        maxAge: 60 * 60 * 24 * 1000
+        maxAge: 60 * 60 * 24 * 1000 * 30 // cookie for 30 days 
     }
 }));
+
+// This function is used everytime u switch page
+app.use(function (req, res, next) {
+    sesh = req.session;
+    res.locals.userId = req.session.userId;
+    // console.log(req.session.userId);
+    // console.log(req.session);
+    // console.log(sesh);
+    next();
+});
 
 // Req to request czyli informacja o przychodzącej informacji ze ktoś pojawił się na stronie
 // Res to response czyli nasza odpowiedz w postaci np. HTML 
@@ -53,13 +68,26 @@ app.use(session({
 
 
 app.get('/', (req, res) => {
-    res.render('home', { title: "Home", isLogged: "Not set" });
+
+    if (sesh.userId) {
+        res.render('home', { title: "Home" });
+    }
+    else {
+        res.render('home', { title: "Home" });
+    }
+
 })
 
 
 
+// ## SIGN IN ## 
 app.get('/signIn', (req, res) => {
-    res.render('signIn', { title: "Sign In", query: req.query });
+    if (sesh.userId) {
+        res.redirect(url.format({ pathname: "/" }));
+    }
+    else {
+        res.render('signIn', { title: "Sign In", query: req.query });
+    }
 })
 
 // Registering user and checking if already exists in db 
@@ -144,9 +172,15 @@ app.post('/signIn', (req, res) => {
 
 })
 
-
+// ## LOG IN LOG OUT ## 
 app.get('/login', (req, res) => {
-    res.render('login', { title: "Log in", query: req.query });
+
+    if (sesh.userId) {
+        res.redirect(url.format({ pathname: "/" }));
+    }
+    else {
+        res.render('login', { title: "Log in", query: req.query });
+    }
 })
 
 app.post('/login', function (req, res) {
@@ -157,10 +191,12 @@ app.post('/login', function (req, res) {
     // Error: 2 - User not found
     // Error: 3 - User found but Password is wrong
 
-
-
     User.findOne({ $or: [{ username: username }, { email: username }] })
         .then(response => {
+
+            let userUsername = response.username; // we need that bcs user can input email so we want to make sure we have his username!
+
+            // console.log(req.session);
 
             if (response !== null) {
                 // User found
@@ -179,6 +215,9 @@ app.post('/login', function (req, res) {
                     }
                     if (responsebCrypt) {
                         // Password Matched! User can log in (add session)
+                        sesh = req.session;
+                        sesh.userId = userUsername;
+
                         res.redirect(url.format({
                             pathname: "/",
                         }));
@@ -204,6 +243,17 @@ app.post('/login', function (req, res) {
         })
 })
 
+app.get('/logout', (req, res) => {
+
+    if (sesh.userId) {
+        req.session.destroy();
+        res.redirect(url.format({ pathname: "/" }));
+    }
+    else {
+        res.redirect(url.format({ pathname: "/" }));
+    }
+})
+
 
 
 
@@ -214,10 +264,14 @@ app.post('/login', function (req, res) {
 // Site with all posts
 app.get('/posts', (req, res) => {
     // Są dwie opcje wyrenderowania strony Static (res.sendFile) i Dynamic (res.render) i chodzi o to, jakie dane tam trafiają jak są jakieś promise to lepiej dynamic
-    console.log("get - /posts");
     Post.find()
         .then(data => {
-            res.render('posts', { title: "Posts", msg: "hi!", recentlyAddedPost: false, dbData: data });
+            if (session.userId) {
+                res.render('posts', { title: "Posts", msg: "hi!", recentlyAddedPost: false, dbData: data });
+            } else {
+                res.render('posts', { title: "Posts", msg: "hi!", recentlyAddedPost: false, dbData: data });
+            }
+
         }).catch(err => {
             console.log("Something went wrong with getting post data!")
         })
@@ -226,11 +280,14 @@ app.get('/posts', (req, res) => {
 
 // Site with add post form
 app.get('/addPost', (req, res) => {
-    console.log("get - /addPost");
-    res.render('addPost', { title: "Add post" });
+    if (sesh.userId) {
+        res.render('addPost', { title: "Add post", recentlyAddedPost: false });
+    } else {
+        res.render('addPost', { title: "Add post", recentlyAddedPost: false });
+    }
 })
 
-app.post('/verify-post', (req, res) => {
+app.post('/addPost', (req, res) => {
     // Here we should check if form data is correct
     const postValues = req.body;
 
@@ -248,9 +305,6 @@ app.post('/verify-post', (req, res) => {
         })
 
 })
-
-
-
 
 
 app.listen(3000, () => {
